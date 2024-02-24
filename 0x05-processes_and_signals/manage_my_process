@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
-# This script performs specified actions, including signal handling.
-
-echo $$ > /var/run/my_process.pid
-
-# Handle SIGINT
-trap 'echo "Y U no love me?!"' SIGINT
-
-# Handle SIGTERM and SIGQUIT
-trap 'echo "I hate the kill command"; rm -f /var/run/my_process.pid; exit' SIGTERM SIGQUIT
+# This script writes "I am alive!" to /tmp/my_process every 2 seconds.
 
 while true; do
     echo "I am alive!" >> /tmp/my_process
