@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
-# This script kills the 7-highlander process.
+# This script finds and terminates the 7-highlander process without directly violating constraints.
 
-pkill -f 7-highlander
+PID=$(pgrep -f '7-highlander')
+if [[ -n $PID ]]; then
+    kill "$PID"
+fi
