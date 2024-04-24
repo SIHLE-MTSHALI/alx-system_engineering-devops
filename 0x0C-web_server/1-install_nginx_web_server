@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 # Script to install Nginx and configure to return 'Hello World!'
-apt-get update -y
-apt-get install nginx -y
 
-# Configure Nginx to return 'Hello World!'
-echo "Hello World!" > /var/www/html/index.html
+apt-get update
+apt-get install -y nginx
 
-# Ensure Nginx listens on port 80
-sed -i 's/listen 80;/listen 80;/g' /etc/nginx/sites-available/default
-
-# Restart Nginx (using nginx command, not systemctl)
-nginx -s reload
+echo "Hello World!" | tee /var/www/html/index.nginx-debian.html
+sed -i 's/80/8080/g' /etc/nginx/sites-available/default
+service nginx restart
