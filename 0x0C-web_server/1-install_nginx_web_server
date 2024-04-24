@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Script to install Nginx and configure to return 'Hello World!'
+apt-get update -y
+apt-get install nginx -y
+
+# Configure Nginx to return 'Hello World!'
+echo "Hello World!" > /var/www/html/index.html
+
+# Ensure Nginx listens on port 80
+sed -i 's/listen 80;/listen 80;/g' /etc/nginx/sites-available/default
+
+# Restart Nginx (using nginx command, not systemctl)
+nginx -s reload
