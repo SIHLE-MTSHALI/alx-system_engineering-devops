@@ -1,18 +1,37 @@
-package { 'nginx':
-  ensure => installed,
-}
+class nginx_installation {
+    package { 'nginx':
+        ensure => present,
+    }
 
-file { '/var/www/html/index.nginx-debian.html':
-  content => 'Hello World!',
-}
+    # Create a basic Nginx configuration with Hello World at the root
+    file { '/var/www/html/index.html':
+        ensure  => file,
+        content => 'Hello World!',
+    }
 
-file_line { 'Redirect 301 /redirect_me':
-  path => '/etc/nginx/sites-available/default',
-  line => 'rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;',
-  after => 'server_name _;',
-}
+    # Create the redirection configuration
+    file { '/etc/nginx/sites-available/redirect_config':
+        ensure  => file,
+        content => "
+        server {
+            listen 80;
+            location /redirect_me {
+                return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+            }
+        }
+        ",
+    }
 
-service { 'nginx':
-  ensure  => running,
-  require => Package['nginx'],
+    # Enable the configuration
+    file { '/etc/nginx/sites-enabled/redirect_config':
+        ensure => link,
+        target => '/etc/nginx/sites-available/redirect_config',
+    }
+
+    # Reload Nginx
+    exec { 'nginx_reload':
+        command => 'nginx -s reload',
+        refreshonly => true,
+        subscribe => File['/etc/nginx/sites-available/redirect_config'],
+    }
 }
