@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+apt-get update
+apt-get install -y nginx
+
+echo "Hello World!" | tee /var/www/html/index.nginx-debian.html
+sed -i 's/80/8080/g' /etc/nginx/sites-available/default
+
+rewrite_rule=$(cat <<EOF
+rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;
+EOF
+)
+
+sed -i "s|server_name _;|server_name _;\n\n\t$rewrite_rule|" /etc/nginx/sites-available/default
+
+service nginx restart
