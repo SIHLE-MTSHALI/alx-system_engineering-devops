@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# Check if the domain argument is provided
+if [ $# -lt 1 ]; then
+    echo "Please provide a domain name as an argument."
+    exit 1
+fi
+
+domain=$1
+subdomain=$2
+
+# Function to display information about a subdomain
+display_subdomain_info() {
+    local subdomain=$1
+    local record_type=$(dig $subdomain.$domain | awk '/ANSWER SECTION:/{getline; print $4}')
+    local destination=$(dig $subdomain.$domain | awk '/ANSWER SECTION:/{getline; print $5}')
+    echo "The subdomain $subdomain is a $record_type record and points to $destination"
+}
+
+# Display information for specific subdomains if no subdomain argument is provided
+if [ -z "$subdomain" ]; then
+    subdomains=("www" "lb-01" "web-01" "web-02")
+    for sub in "${subdomains[@]}"; do
+        display_subdomain_info $sub
+    done
+else
+    display_subdomain_info $subdomain
+fi
