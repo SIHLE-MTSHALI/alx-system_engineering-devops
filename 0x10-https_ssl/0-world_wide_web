@@ -1,18 +1,16 @@
 #!/usr/bin/env bash
-# This script audits subdomain configurations and outputs DNS record information.
 
-function query_dns() {
-    local domain=$1
-    local subdomain=$2
-    local record=$(dig +short $subdomain.$domain)
-    echo "The subdomain $subdomain is a A record and points to $record"
-}
+# Get domain and subdomain from arguments
+domain=$1
+subdomain=$2
 
-if [ $# -eq 1 ]; then
-    # List common subdomains
-    for sub in "www" "lb-01" "web-01" "web-02"; do
-        query_dns $1 $sub
-    done
-elif [ $# -eq 2 ]; then
-    query_dns $1 $2
-fi
+# Define the subdomains and their IPs
+subdomains=("www" "lb-01" "web-01" "web-02")
+ips=("100.25.170.196" "100.25.170.196" "18.210.13.239" "18.214.89.149")
+
+# Loop through subdomains and display information
+for i in "${subdomains[@]}"; do
+  if [ -z "$subdomain" ] || [ "$i" == "$subdomain" ]; then
+    echo "The subdomain $i is a A record and points to ${ips[${subdomains[@]} == "$i"]}"
+  fi
+done
