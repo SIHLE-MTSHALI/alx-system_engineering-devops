@@ -20,3 +20,6 @@ echo "server {
 
 # Restart Nginx service
 service nginx restart
+
+# Verify Nginx is listening on port 80
+netstat -tlnp | grep nginx
