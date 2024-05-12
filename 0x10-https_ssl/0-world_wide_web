@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# This script audits subdomain configurations and outputs DNS record information.
+
+function query_dns() {
+    local domain=$1
+    local subdomain=$2
+    local record=$(dig +short $subdomain.$domain)
+    echo "The subdomain $subdomain is a A record and points to $record"
+}
+
+if [ $# -eq 1 ]; then
+    # List common subdomains
+    for sub in "www" "lb-01" "web-01" "web-02"; do
+        query_dns $1 $sub
+    done
+elif [ $# -eq 2 ]; then
+    query_dns $1 $2
+fi

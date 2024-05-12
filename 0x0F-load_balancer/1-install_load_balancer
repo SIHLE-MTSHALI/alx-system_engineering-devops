@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Installs and configures HAproxy as a load balancer
+
+sudo apt-get -y install haproxy
+
+backend_conf="backend web-backend\n\tbalance roundrobin\n\t"
+backend_conf+="server 483003-web-01 18.210.13.239:80 check\n\t"
+backend_conf+="server 483003-web-02 18.214.89.149:80 check\n"
+
+sudo sed -i "s/backend haproxy-backend/backend haproxy-backend\n\n${backend_conf}/" /etc/haproxy/haproxy.cfg
+
+sudo sed -i "s/ENABLED=0/ENABLED=1/" /etc/default/haproxy
+
+sudo service haproxy restart

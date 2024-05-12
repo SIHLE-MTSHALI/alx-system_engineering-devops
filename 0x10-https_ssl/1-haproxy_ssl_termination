@@ -1,0 +1,24 @@
+global
+    log /dev/log local0
+    log /dev/log local1 notice
+    user haproxy
+    group haproxy
+    ssl-default-bind-options no-sslv3
+    ssl-default-bind-ciphers ECDHE-RSA-AES128-GCM-SHA256
+
+defaults
+    log     global
+    mode    http
+    option  httplog
+    option  dontlognull
+    timeout connect 5000
+    timeout client  50000
+    timeout server  50000
+
+frontend https_front
+    bind *:443 ssl crt /etc/ssl/private/sihlemtshali.tech.pem
+    default_backend www-backend
+
+backend www-backend
+    server web-01 18.210.13.239:80 check
+    server web-02 18.214.89.149:80 check
