@@ -1,8 +1,8 @@
 #
-# before.rules
+# /etc/ufw/before.rules
 #
-# Rules that should be run before the ufw command line added rules. Custom
-# rules should be added to one of these chains:
+# Rules that should be run before the ufw command line added rules.
+# Custom rules should be added to one of these chains:
 #   ufw-before-input
 #   ufw-before-output
 #   ufw-before-forward
@@ -10,7 +10,8 @@
 
 *nat
 :PREROUTING ACCEPT [0:0]
-# Redirect traffic from port 8080 to port 80
+:POSTROUTING ACCEPT [0:0]
+# Port forwarding rule
 -A PREROUTING -p tcp --dport 8080 -j REDIRECT --to-port 80
 COMMIT
 
@@ -22,32 +23,32 @@ COMMIT
 :ufw-not-local - [0:0]
 # End required lines
 
-# Allow all traffic on the loopback interface
+# Allow all traffic on loopback interface
 -A ufw-before-input -i lo -j ACCEPT
 -A ufw-before-output -o lo -j ACCEPT
 
-# Quickly process packets for established connections
+# Allow established and related connections
 -A ufw-before-input -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 -A ufw-before-output -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 -A ufw-before-forward -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 
-# Drop invalid packets and log them
+# Drop invalid packets
 -A ufw-before-input -m conntrack --ctstate INVALID -j ufw-logging-deny
 -A ufw-before-input -m conntrack --ctstate INVALID -j DROP
 
-# Allow certain ICMP packets
+# Allow ICMP packets
 -A ufw-before-input -p icmp --icmp-type destination-unreachable -j ACCEPT
 -A ufw-before-input -p icmp --icmp-type time-exceeded -j ACCEPT
 -A ufw-before-input -p icmp --icmp-type parameter-problem -j ACCEPT
 -A ufw-before-input -p icmp --icmp-type echo-request -j ACCEPT
 
-# Allow certain ICMP packets in the FORWARD chain
+# Allow ICMP packets in the forward chain
 -A ufw-before-forward -p icmp --icmp-type destination-unreachable -j ACCEPT
 -A ufw-before-forward -p icmp --icmp-type time-exceeded -j ACCEPT
 -A ufw-before-forward -p icmp --icmp-type parameter-problem -j ACCEPT
 -A ufw-before-forward -p icmp --icmp-type echo-request -j ACCEPT
 
-# Allow DHCP client to receive responses
+# Allow DHCP client
 -A ufw-before-input -p udp --sport 67 --dport 68 -j ACCEPT
 
 #
@@ -55,23 +56,23 @@ COMMIT
 #
 -A ufw-before-input -j ufw-not-local
 
-# If the destination is local, return
+# If LOCAL, RETURN
 -A ufw-not-local -m addrtype --dst-type LOCAL -j RETURN
 
-# If the destination is multicast, return
+# If MULTICAST, RETURN
 -A ufw-not-local -m addrtype --dst-type MULTICAST -j RETURN
 
-# If the destination is broadcast, return
+# If BROADCAST, RETURN
 -A ufw-not-local -m addrtype --dst-type BROADCAST -j RETURN
 
-# Drop all other non-local packets
+# All other non-local packets are dropped
 -A ufw-not-local -m limit --limit 3/min --limit-burst 10 -j ufw-logging-deny
 -A ufw-not-local -j DROP
 
-# Allow multicast DNS for service discovery
+# Allow multicast DNS
 -A ufw-before-input -p udp -d 224.0.0.251 --dport 5353 -j ACCEPT
 
-# Allow multicast UPnP for service discovery
+# Allow multicast UPnP
 -A ufw-before-input -p udp -d 239.255.255.250 --dport 1900 -j ACCEPT
 
 # Do not delete the 'COMMIT' line or these rules won't be processed
