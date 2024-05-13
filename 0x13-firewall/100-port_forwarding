@@ -1,5 +1,5 @@
 #
-# /etc/ufw/before.rules
+# /etc/ufw/before6.rules
 #
 # Rules that should be run before the ufw command line added rules.
 # Custom rules should be added to one of these chains:
@@ -37,19 +37,19 @@ COMMIT
 -A ufw-before-input -m conntrack --ctstate INVALID -j DROP
 
 # Allow ICMP packets
--A ufw-before-input -p icmp --icmp-type destination-unreachable -j ACCEPT
--A ufw-before-input -p icmp --icmp-type time-exceeded -j ACCEPT
--A ufw-before-input -p icmp --icmp-type parameter-problem -j ACCEPT
--A ufw-before-input -p icmp --icmp-type echo-request -j ACCEPT
+-A ufw-before-input -p icmpv6 --icmpv6-type destination-unreachable -j ACCEPT
+-A ufw-before-input -p icmpv6 --icmpv6-type time-exceeded -j ACCEPT
+-A ufw-before-input -p icmpv6 --icmpv6-type parameter-problem -j ACCEPT
+-A ufw-before-input -p icmpv6 --icmpv6-type echo-request -j ACCEPT
 
 # Allow ICMP packets in the forward chain
--A ufw-before-forward -p icmp --icmp-type destination-unreachable -j ACCEPT
--A ufw-before-forward -p icmp --icmp-type time-exceeded -j ACCEPT
--A ufw-before-forward -p icmp --icmp-type parameter-problem -j ACCEPT
--A ufw-before-forward -p icmp --icmp-type echo-request -j ACCEPT
+-A ufw-before-forward -p icmpv6 --icmpv6-type destination-unreachable -j ACCEPT
+-A ufw-before-forward -p icmpv6 --icmpv6-type time-exceeded -j ACCEPT
+-A ufw-before-forward -p icmpv6 --icmpv6-type parameter-problem -j ACCEPT
+-A ufw-before-forward -p icmpv6 --icmpv6-type echo-request -j ACCEPT
 
 # Allow DHCP client
--A ufw-before-input -p udp --sport 67 --dport 68 -j ACCEPT
+-A ufw-before-input -p udp --sport 547 --dport 546 -j ACCEPT
 
 #
 # ufw-not-local
@@ -70,10 +70,10 @@ COMMIT
 -A ufw-not-local -j DROP
 
 # Allow multicast DNS
--A ufw-before-input -p udp -d 224.0.0.251 --dport 5353 -j ACCEPT
+-A ufw-before-input -p udp -d ff02::fb --dport 5353 -j ACCEPT
 
 # Allow multicast UPnP
--A ufw-before-input -p udp -d 239.255.255.250 --dport 1900 -j ACCEPT
+-A ufw-before-input -p udp -d ff02::c -j ACCEPT
 
 # Do not delete the 'COMMIT' line or these rules won't be processed
 COMMIT
