@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 
-# Block all incoming traffic
+# Reset UFW rules
+ufw --force reset
+
+# Set default policies
 ufw default deny incoming
+ufw default allow outgoing
 
 # Allow incoming traffic on ports 22, 443, and 80
 ufw allow 22/tcp
@@ -9,4 +13,4 @@ ufw allow 443/tcp
 ufw allow 80/tcp
 
 # Enable the firewall
-ufw enable
+ufw --force enable

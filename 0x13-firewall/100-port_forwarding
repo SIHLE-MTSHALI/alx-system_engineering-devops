@@ -2,4 +2,5 @@
 
 # Forward port 8080/TCP to port 80/TCP
 ufw route allow in on eth0 to any port 8080 proto tcp
+ufw route allow out on eth0 from any to any port 80 proto tcp
 iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 8080 -j REDIRECT --to-port 80
