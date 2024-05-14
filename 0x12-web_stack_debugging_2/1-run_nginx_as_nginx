@@ -6,7 +6,7 @@ apt-get update
 apt-get install -y nginx
 
 # Update the configuration to run as nginx user
-sed -i 's/user root;/user nginx;/g' /etc/nginx/nginx.conf
+sed -i 's/user www-data;/user nginx;/g' /etc/nginx/nginx.conf
 
-# Start nginx
-service nginx start
+# Restart nginx to apply changes
+service nginx restart
