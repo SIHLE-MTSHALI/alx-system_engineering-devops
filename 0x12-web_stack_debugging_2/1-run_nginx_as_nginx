@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# This script configures Nginx to run as the nginx user
+
+# Ensure nginx is installed
+apt-get update
+apt-get install -y nginx
+
+# Update the configuration to run as nginx user
+sed -i 's/user root;/user nginx;/g' /etc/nginx/nginx.conf
+
+# Start nginx
+service nginx start
