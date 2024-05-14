@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Configure Nginx to run as nginx user in 7 lines or less
+
+apt-get update
+apt-get install -y nginx
+sed -i 's/user root;/user nginx;/g' /etc/nginx/nginx.conf
+service nginx start
