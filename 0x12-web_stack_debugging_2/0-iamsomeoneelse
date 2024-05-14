@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# This script runs the whoami command as another user passed as an argument
+
+if [ $# -eq 0 ]; then
+  echo "No user specified"
+  exit 1
+fi
+
+sudo -u "$1" whoami
