@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# This script backs up all MySQL databases and compresses the backup
+
+PASSWORD=$1
+DATE=$(date +%d-%m-%Y)
+FILENAME="${DATE}.tar.gz"
+
+# Dump all databases into a single file
+mysqldump -u root -p${PASSWORD} --all-databases > backup.sql
+
+# Compress the backup file
+tar -czvf ${FILENAME} backup.sql
+
+# Clean up
+rm backup.sql
