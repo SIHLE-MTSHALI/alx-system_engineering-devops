@@ -18,7 +18,8 @@ if __name__ == "__main__":
         user_id = user.get('id')
         username = user.get('username')
         user_todos = [todo for todo in todos if todo.get('userId') == user_id]
-        tasks = [{"task": todo.get('title'), "completed": todo.get('completed'),
+        tasks = [{"task": todo.get('title'),
+                  "completed": todo.get('completed'),
                   "username": username} for todo in user_todos]
         data[user_id] = tasks
 
